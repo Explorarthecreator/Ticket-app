@@ -25,6 +25,7 @@ model Ticket{
 }
 
 
+
 enum Status {
   OPEN
   STARTED
