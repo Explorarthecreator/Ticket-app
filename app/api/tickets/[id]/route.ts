@@ -1,6 +1,6 @@
 import prisma from "@/prisma/db";
 import { NextRequest, NextResponse } from "next/server";
-import { ticketSchema } from "@/validationSchema/ticket";
+import { ticketPatchSchema } from "@/validationSchema/ticket";
 
 interface Props {
   params: {
@@ -11,7 +11,7 @@ interface Props {
 export async function PATCH(request: NextRequest, { params }: Props) {
   const body = await request.json();
 
-  const validation = ticketSchema.safeParse(body);
+  const validation = ticketPatchSchema.safeParse(body);
 
   if (!validation.success) {
     return NextResponse.json(validation.error.format(), { status: 400 });
@@ -24,6 +24,9 @@ export async function PATCH(request: NextRequest, { params }: Props) {
     return NextResponse.json({ error: "There is Error" }, { status: 400 });
   }
 
+  if (body?.assignedToUserId) {
+    body.assignedToUserId = parseInt(body.assignedToUserId);
+  }
   const updateTicket = await prisma.ticket.update({
     where: { id: ticket.id },
     data: {
