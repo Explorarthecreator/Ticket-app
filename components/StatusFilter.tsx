@@ -44,7 +44,7 @@ const StatusFilter = () => {
         router.push(`/tickets${query}`);
       }}
     >
-      <SelectTrigger>
+      <SelectTrigger className="w-[200px]">
         <SelectValue placeholder="Filter by status" />
       </SelectTrigger>
       <SelectContent>
