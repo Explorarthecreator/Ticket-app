@@ -1,8 +1,17 @@
 import prisma from "@/prisma/db";
 import { ticketSchema } from "@/validationSchema/ticket";
+import { getServerSession } from "next-auth";
 import { NextRequest, NextResponse } from "next/server";
+import options from "../auth/[...nextauth]/options";
 
 export async function POST(request: NextRequest) {
+  // You cannot create ticket unless you are logged in
+  const session = await getServerSession(options);
+
+  if (!session) {
+    return NextResponse.json({ error: "Not authenticated" }, { status: 401 });
+  }
+
   const body = await request.json();
 
   const validation = ticketSchema.safeParse(body);
